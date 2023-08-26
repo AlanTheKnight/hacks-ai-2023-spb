@@ -1,7 +1,6 @@
 import { defineNuxtPlugin } from "#app";
 import { ofetch } from "ofetch";
 import { useAuthStore } from "~/stores/auth";
-import { getLocalData, LocalData } from "~/utils/local";
 
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -9,13 +8,16 @@ const defaultHeaders = {
 };
 
 export default defineNuxtPlugin((nuxtApp) => {
+  const authStore = useAuthStore();
+
   globalThis.$fetch = ofetch.create({
     baseURL: "/api/",
-    retry: 2,
-    retryStatusCodes: [401, 403],
+    retry: 1,
+    retryDelay: 200,
+    retryStatusCodes: [401],
     headers: defaultHeaders,
     async onRequest({ request, options }) {
-      const token = getLocalData(LocalData.ACCESS_TOKEN);
+      const token = authStore.access_token;
       if (token && !(request === AuthAPIURLS.LOGIN))
         options.headers = {
           ...defaultHeaders,
@@ -27,22 +29,16 @@ export default defineNuxtPlugin((nuxtApp) => {
         ofetch("/api/" + AuthAPIURLS.REFRESH_TOKEN, {
           method: "POST",
           body: {
-            refresh: getLocalData(LocalData.REFRESH_TOKEN),
+            refresh: authStore.refresh_token,
           },
         })
-          .catch((error) => {
-            const authStore = useAuthStore();
-            // authStore.logoutAction();
-            return Promise.reject(error);
-          })
           .then((response) => {
-            setLocalData(LocalData.ACCESS_TOKEN, response.access);
-            options.headers = {
-              ...defaultHeaders,
-              Authorization: `Bearer ${response.access}`,
-            };
-            options.retry = 1;
+            authStore.updateAccessToken(response.access);
             return Promise.resolve();
+          })
+          .catch((error) => {
+            authStore.logoutAction();
+            return Promise.reject(error);
           });
       }
     },

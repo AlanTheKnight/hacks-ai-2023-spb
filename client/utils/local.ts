@@ -1,6 +1,7 @@
 export enum LocalData {
   ACCESS_TOKEN = "access_token",
   REFRESH_TOKEN = "refresh_token",
+  CURRENT_PRESENTATION = "current-pres",
 }
 
 export function setLocalData(key: LocalData, value: string, serialize = false): void {
@@ -18,4 +19,9 @@ export function clearLocalData(): void {
   if (!process.client) return;
   localStorage.removeItem(LocalData.ACCESS_TOKEN);
   localStorage.removeItem(LocalData.REFRESH_TOKEN);
+}
+
+export function clearLocalPresentationId(): void {
+  if (!process.client) return;
+  localStorage.removeItem(LocalData.CURRENT_PRESENTATION);
 }
