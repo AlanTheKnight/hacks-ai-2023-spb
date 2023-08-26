@@ -14,11 +14,10 @@ from backend.presentations.generation import driver
 BASE_DATA = {
     "bg": {
         "type": "gradient",
-        "color1": "a3fff9",
-        "color2": "a3b4ff",
-        "angle": 45,
+        "color1": "#e0fbff",
+        "color2": "#f5e2ff",
     },
-    "logo": {"size": 0.7, "path": "logo.png"},
+    "logo": {"size": 0.7},
     "font": {"name": "VK Sans Display", "title_size": 50, "regular_size": 38},
 }
 
@@ -104,12 +103,15 @@ def get_name(description: str):
 
 
 def final_generation(id: int, pptx_data: dict, logo: str, name: str):
+    MEDIA_FOLDER = settings.BASE_DIR / "media"
+
     data = deepcopy(BASE_DATA)
     data["name"] = name
     data["brief"] = pptx_data["about"]
+    data["logo"]["path"] = logo
 
     FILENAME = f"presentation-{id}.pptx"
-    URL = str(settings.BASE_DIR / "media" / FILENAME)
+    URL = str(MEDIA_FOLDER / FILENAME)
 
     driver(data, URL)
 
@@ -141,7 +143,7 @@ def process_presentation(self, presentation_id: int):
     presentation.result.pptx = final_generation(
         presentation.id,
         presentation.result.pptx_data,
-        presentation.result.logo,
-        "MathUp",
+        presentation.result.logo.path,
+        presentation.result.name,
     )
     presentation.result.save()

@@ -5,12 +5,17 @@ from pptx.slide import Slide
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 
+from random import randint
+import os
+
 
 PRESENTATION_WIDTH = Inches(16)
 PRESENTATION_HEIGHT = Inches(9)
 
 
 def add_custom_logo(config, slide: Slide):
+    if not os.path.isfile(config["logo"]["path"]):
+        return
     border_offset = Inches(0.25) + Inches(config["logo"]["size"])
     slide.shapes.add_picture(
         config["logo"]["path"],
@@ -39,7 +44,7 @@ def set_slide_background(config, slide: Slide):
         fill.gradient()
         fill.gradient_stops[0].color.rgb = RGBColor.from_string(config["bg"]["color1"])
         fill.gradient_stops[1].color.rgb = RGBColor.from_string(config["bg"]["color2"])
-        fill.gradient_angle = config["bg"]["angle"]
+        fill.gradient_angle = randint(0, 360)
     elif config["bg"]["type"] == "solid":
         fill.solid()
         fill.fore_color.rgb = RGBColor.from_string(config["bg"]["color"])
@@ -72,6 +77,6 @@ def driver(config, output_path: str):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     create_title_slide(config, slide)
     set_slide_background(config, slide)
-    # add_custom_logo(config, prs, slide)
+    add_custom_logo(config, slide)
 
     prs.save(output_path)

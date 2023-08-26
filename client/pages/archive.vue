@@ -4,6 +4,7 @@ import { usePresentStore } from "~/stores/presentation";
 const presentStore = usePresentStore();
 
 onMounted(() => {
+  presentStore.fetchPresentations();
   setInterval(presentStore.fetchPresentations, 4000);
 });
 </script>
