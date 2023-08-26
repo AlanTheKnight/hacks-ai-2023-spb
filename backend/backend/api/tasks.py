@@ -38,7 +38,7 @@ def get_economic_data(checko_url: str):
 
 
 def get_pptx_data(description: str):
-    return {"Задача": "Заработать миллион"}
+    return {"about": description}
 
 
 def get_logo(description: str):
