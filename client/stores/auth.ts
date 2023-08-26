@@ -17,6 +17,11 @@ export const useAuthStore = defineStore("auth", () => {
     });
   }
 
+  function updateAccessToken(token: string) {
+    access_token.value = token;
+    setLocalData(LocalData.ACCESS_TOKEN, token);
+  }
+
   function loginAction(data: TelegramUserData) {
     login(data).then((response) => {
       setLocalData(LocalData.ACCESS_TOKEN, response.access);
@@ -37,12 +42,6 @@ export const useAuthStore = defineStore("auth", () => {
     });
   }
 
-  onMounted(() => {
-    if (user.value === null && access_token.value) {
-      getCurrentUserAction(); 
-    }
-  });
-
   return {
     user,
     loggedIn,
@@ -50,6 +49,7 @@ export const useAuthStore = defineStore("auth", () => {
     logoutAction,
     access_token,
     refresh_token,
+    updateAccessToken,
     getCurrentUserAction,
   };
 });

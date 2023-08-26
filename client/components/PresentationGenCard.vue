@@ -1,71 +1,97 @@
 <script lang="ts" setup>
+import { usePresentStore } from "~/stores/presentation";
+
+const isLoading = ref(false);
+
 const useCustomLogo = ref(false);
 const useCustomName = ref(false);
+const description = ref("");
+
+const submitCallback = async () => {
+  isLoading.value = true;
+
+  const response = await createPresentation({
+    generate_logo: !useCustomLogo.value,
+    generate_name: !useCustomName.value,
+    description: description.value,
+  });
+
+  const presentStore = usePresentStore();
+  presentStore.setCurrentPresentation(response.id.toString());
+};
 </script>
 
 <template>
-  <h1 class="text-center fw-bold">Генерация презентации</h1>
-  <div class="text-center text-muted mb-5">
-    Ответьте на несколько вопросов и создайте уникальную презентацию<br />для питчинга своего
-    проекта!
+  <div class="mb-5">
+    <h1 class="text-center fw-bold">Генерация презентации</h1>
+    <div class="text-center text-muted mb-5">
+      Ответьте на несколько вопросов и создайте уникальную презентацию<br />для питчинга своего
+      проекта!
+    </div>
+
+    <div v-if="!isLoading">
+      <FormKit type="form" submit-label="Начать генерацию!" @submit="submitCallback">
+        <div class="mb-4">
+          <h3 class="fs-4 mb-3">1. Название проекта</h3>
+          <div class="alert alert-success" v-if="!useCustomName">
+            <i class="bi-stars me-2"></i>ИИ сгенерирует название для вас
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input
+              id="useCustomLogoSwitch"
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              v-model="useCustomName" />
+            <label class="form-check-label" for="useCustomLogoSwitch"
+              >У меня уже есть своё название</label
+            >
+          </div>
+          <div v-if="useCustomName">
+            <FormKit type="text" validation-label="«название»" />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="fs-4 mb-3">2. Логотип</h3>
+
+          <div class="alert alert-success" v-if="!useCustomLogo">
+            <i class="bi-stars me-2"></i>ИИ сгенерирует логотип для вас
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            <input
+              id="useCustomLogoSwitch"
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              v-model="useCustomLogo" />
+            <label class="form-check-label" for="useCustomLogoSwitch">Использовать своё лого</label>
+          </div>
+
+          <div v-if="useCustomLogo">
+            <FormKit type="file" validation-label="«логотип»" accept=".png" />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="fs-4 mb-3">3. Подробное описание проекта</h3>
+          <FormKit
+            type="textarea"
+            rows="10"
+            name="description"
+            v-model="description"
+            outer-class="mb-3"
+            validation-visibility="blur"
+            validation-label="«описание проекта»"
+            validation="required" />
+        </div>
+      </FormKit>
+    </div>
+    <div v-else>
+      <LoadingScreen />
+    </div>
   </div>
-
-  <FormKit type="form" submit-label="Начать генерацию!">
-    <div class="mb-4">
-      <h3 class="fs-4 mb-3">1. Название проекта</h3>
-      <div class="alert alert-success" v-if="!useCustomName">
-        <i class="bi-stars me-2"></i>ИИ сгенерирует название для вас
-      </div>
-      <div class="form-check form-switch mb-3">
-        <input
-          id="useCustomLogoSwitch"
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          v-model="useCustomName" />
-        <label class="form-check-label" for="useCustomLogoSwitch"
-          >У меня уже есть своё название</label
-        >
-      </div>
-      <div v-if="useCustomName">
-        <FormKit type="text" validation-label="«название»" />
-      </div>
-    </div>
-
-    <div class="mb-4">
-      <h3 class="fs-4 mb-3">2. Логотип</h3>
-
-      <div class="alert alert-success" v-if="!useCustomLogo">
-        <i class="bi-stars me-2"></i>ИИ сгенерирует логотип для вас
-      </div>
-
-      <div class="form-check form-switch mb-3">
-        <input
-          id="useCustomLogoSwitch"
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          v-model="useCustomLogo" />
-        <label class="form-check-label" for="useCustomLogoSwitch">Использовать своё лого</label>
-      </div>
-
-      <div v-if="useCustomLogo">
-        <FormKit type="file" validation-label="«логотип»" accept=".png" />
-      </div>
-    </div>
-
-    <div class="mb-4">
-      <h3 class="fs-4 mb-3">3. Подробное описание проекта</h3>
-      <FormKit
-        type="textarea"
-        rows="10"
-        name="description"
-        outer-class="mb-3"
-        validation-visibility="blur"
-        validation-label="«описание проекта»"
-        validation="required|length:1,30" />
-    </div>
-  </FormKit>
 </template>
 
 <style>

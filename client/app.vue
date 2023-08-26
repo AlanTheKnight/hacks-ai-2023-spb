@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { useAuthStore } from "./stores/auth";
+
+const authStore = useAuthStore();
+
+onMounted(() => {
+  if (authStore.user === null && authStore.access_token) {
+    authStore.getCurrentUserAction();
+  }
+});
+</script>
+
 <template>
   <MainNavbar />
   <div class="rt-wp view-wrapper">
