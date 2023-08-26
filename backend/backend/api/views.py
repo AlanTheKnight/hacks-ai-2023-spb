@@ -10,7 +10,6 @@ from backend.permissions import IsOwner
 class PresentationAPIList(generics.ListCreateAPIView):
     queryset = Presentation.objects.all()
     serializer_class = PresentationSerializer
-    permission_classes = (IsAdminUser,)
 
     def post(self, request, *args, **kwargs):
         res = self.create(request, *args, **kwargs)
@@ -21,4 +20,4 @@ class PresentationAPIList(generics.ListCreateAPIView):
 class PresentationAPIDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Presentation.objects.all()
     serializer_class = PresentationSerializer
-    permission_classes = (IsOwner, IsAdminUser,)
+    permission_classes = (IsOwner,)
