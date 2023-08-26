@@ -14,6 +14,13 @@ export interface PresentationAPI {
   id: number;
 }
 
+export interface ExtendedPresentationAPI extends PresentationAPI {
+  result: {
+    pptx_status: string;
+    pptx: string;
+  };
+}
+
 export const createPresentation = async (data: CreatePresentationAPI) => {
   const fd = new FormData();
   fd.append("description", data.description);
@@ -34,5 +41,19 @@ export const getPresentation = async (id: string) => {
     headers: {
       "Content-Type": "application/json",
     },
+  });
+};
+
+export interface ListPresentationsFilters {
+  creator__id?: number;
+  result__pptx?: "Готово" | "В очереди";
+}
+
+export const listPresentations = async (query?: ListPresentationsFilters) => {
+  return $fetch<ExtendedPresentationAPI[]>("presentations/", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    query: query,
   });
 };

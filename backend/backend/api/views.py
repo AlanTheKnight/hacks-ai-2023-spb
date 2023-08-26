@@ -10,8 +10,14 @@ from backend.permissions import IsOwner
 
 
 class PresentationAPIList(generics.ListCreateAPIView):
-    queryset = Presentation.objects.all()
+    queryset = Presentation.objects.all().order_by('-id')
     serializer_class = PresentationSerializer
+    filterset_fields = ["creator__id", "result__pptx_status"]
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return PresentationSerializer
+        return ExtendedPresentationSerializer
 
     def post(self, request, *args, **kwargs):
         res = self.create(request, *args, **kwargs)

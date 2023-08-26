@@ -29,7 +29,9 @@ def get_economic_data(inn: str):
     page = requests.get(f"https://checko.ru/search?query={inn}")
     soup = BS(page.content, "html.parser").find("article", class_="uk-flex-auto")
     s_base_info = soup.find_all("div", class_="basic-data")
-    s_activity = soup.find("table", class_="uk-table uk-table-striped").find_all("td", class_="uk-width-expand")
+    s_activity = soup.find("table", class_="uk-table uk-table-striped").find_all(
+        "td", class_="uk-width-expand"
+    )
     s_coeff = soup.find_all("table", class_="uk-table uk-table-small")[1].find_all("tr")
     s_competitors = soup.find("table", class_="uk-table data-table no-last-border")
 
@@ -51,7 +53,9 @@ def get_economic_data(inn: str):
     response["return_assets"] = s_coeff[10].text.split()[-1]
     response["return_equity"] = s_coeff[11].text.split()[-1]
 
-    response["competitors"] = [i.text for i in s_competitors.find_all("a", class_="link")]
+    response["competitors"] = [
+        i.text for i in s_competitors.find_all("a", class_="link")
+    ]
     logging.info("End get_economic_data")
     return response
 
@@ -69,23 +73,23 @@ def get_pptx_data(description: str):
         "value": f"qa_{description}_В чем ценность и уникальность?*Главная ценность -",
     }
 
-    # print("Start get_pptx_data")
-    # pptx_data = {}
-    # for key, value in keys.items():
-    #     pptx_data[key] = mlclient_lm.submit(value).result()
-    # print("End get_pptx_data")
+    print("Start get_pptx_data")
+    pptx_data = {}
+    for key, value in keys.items():
+        pptx_data[key] = mlclient_lm.submit(value).result()
+    print("End get_pptx_data")
 
-    pptx_data = {
-        "about": "Описание: Приложение для запоминания математических формул",
-        "problem": "Проблема: Приложение для запоминания математических формул",
-        "solution": "Для этого компания Приложение для запоминания математических формул",
-        "target": "Для Приложение для запоминания математических формул",
-        "goal": "Основная цель: Приложение для запоминания математических формул",
-        "activity": "Компания Приложение для запоминания математических формул",
-        "advantages": "Приложение для запоминания математических формул",
-        "convenience": "Удобство для пользователя - Приложение для запоминания математических формул",
-        "value": "Главная ценность - Приложение для запоминания математических формул",
-    }
+    # pptx_data = {
+    #     "about": "Описание: Приложение для запоминания математических формул",
+    #     "problem": "Проблема: Приложение для запоминания математических формул",
+    #     "solution": "Для этого компания Приложение для запоминания математических формул",
+    #     "target": "Для Приложение для запоминания математических формул",
+    #     "goal": "Основная цель: Приложение для запоминания математических формул",
+    #     "activity": "Компания Приложение для запоминания математических формул",
+    #     "advantages": "Приложение для запоминания математических формул",
+    #     "convenience": "Удобство для пользователя - Приложение для запоминания математических формул",
+    #     "value": "Главная ценность - Приложение для запоминания математических формул",
+    # }
 
     return pptx_data
 
@@ -104,12 +108,12 @@ def final_generation(id: int, pptx_data: dict, logo: str, name: str):
     data["name"] = name
     data["brief"] = pptx_data["about"]
 
-    FILENAME = f"media/presentation-{id}.pptx"
-    URL = str(settings.BASE_DIR / FILENAME)
+    FILENAME = f"presentation-{id}.pptx"
+    URL = str(settings.BASE_DIR / "media" / FILENAME)
 
     driver(data, URL)
 
-    return URL
+    return FILENAME
 
 
 @celery_app.task(bind=True)

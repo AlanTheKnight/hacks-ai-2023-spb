@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAuthStore } from "./stores/auth";
+import { usePresentStore } from "./stores/presentation";
 
 const authStore = useAuthStore();
+const presentStore = usePresentStore();
 
 onMounted(() => {
   if (authStore.user === null && authStore.access_token) {
@@ -30,7 +32,7 @@ html {
 }
 
 .view-wrapper {
-  min-height: 1e00vh;
+  min-height: 1vh;
 }
 
 /* @media (min-width: 768px) {

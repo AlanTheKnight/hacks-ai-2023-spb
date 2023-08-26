@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { usePresentStore } from "~/stores/presentation";
 
-const isLoading = ref(false);
-
 const useCustomLogo = ref(false);
 const useCustomName = ref(false);
 
@@ -10,9 +8,11 @@ const custom_name = ref("");
 const custom_logo = ref<File | undefined>(undefined);
 const description = ref("");
 
-const submitCallback = async () => {
-  isLoading.value = true;
+const router = useRouter();
 
+const presentStore = usePresentStore();
+
+const submitCallback = async () => {
   const response = await createPresentation({
     generate_logo: false,
     generate_name: !useCustomName,
@@ -21,8 +21,7 @@ const submitCallback = async () => {
     logo: useCustomLogo ? custom_logo.value : undefined,
   });
 
-  const presentStore = usePresentStore();
-  presentStore.setCurrentPresentation(response.id.toString());
+  router.push("/archive");
 };
 
 const onFileChange = (e: InputEvent) => {
@@ -35,12 +34,13 @@ const onFileChange = (e: InputEvent) => {
 <template>
   <div class="mb-5">
     <h1 class="text-center fw-bold">Генерация презентации</h1>
-    <div class="text-center text-muted mb-5">
-      Ответьте на несколько вопросов и создайте уникальную презентацию<br />для питчинга своего
-      проекта!
-    </div>
 
-    <div v-if="!isLoading">
+    <div v-if="presentStore.allProcessed">
+      <div class="text-center text-muted mb-5">
+        Ответьте на несколько вопросов и создайте уникальную презентацию<br />для питчинга своего
+        проекта!
+      </div>
+
       <FormKit type="form" submit-label="Начать генерацию!" @submit="submitCallback">
         <div class="mb-4">
           <h3 class="fs-4 mb-3">1. Название проекта</h3>
@@ -112,7 +112,10 @@ const onFileChange = (e: InputEvent) => {
       </FormKit>
     </div>
     <div v-else>
-      <LoadingScreen />
+      <div class="alert alert-warning mt-5">
+        <i class="bi bi-exclamation-circle me-2"></i>В данный момент у вас уже генерируется
+        презентация
+      </div>
     </div>
   </div>
 </template>

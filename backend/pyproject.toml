@@ -17,6 +17,7 @@ python-pptx = "^0.6.21"
 redis = "^5.0.0"
 beautifulsoup4 = "^4.12.2"
 toml = "^0.10.2"
+django-filter = "^23.2"
 
 
 [tool.poetry.group.dev.dependencies]

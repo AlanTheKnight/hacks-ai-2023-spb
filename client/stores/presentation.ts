@@ -1,26 +1,28 @@
 import { defineStore } from "pinia";
-import { PresentationAPI } from "~/utils/presentations";
+import { ExtendedPresentationAPI, PresentationAPI } from "~/utils/presentations";
+import { useAuthStore } from "./auth";
 
 export const usePresentStore = defineStore("presentation", () => {
-  const currentPresentationId = ref<string | null>(getLocalData(LocalData.CURRENT_PRESENTATION));
-  const curPresentation = ref<PresentationAPI | null>(null);
+  const presentations = ref<ExtendedPresentationAPI[] | null>(null);
 
-  async function setCurrentPresentation(id: string) {
-    currentPresentationId.value = id;
-    setLocalData(LocalData.CURRENT_PRESENTATION, id);
-    fetchCurrentPres();
-  }
+  const authStore = useAuthStore();
 
-  async function fetchCurrentPres() {
-    if (currentPresentationId.value) {
-      curPresentation.value = await getPresentation(currentPresentationId.value);
-    }
-  }
+  const fetchPresentations = async () => {
+    const response = await listPresentations({
+      creator__id: authStore.user?.id,
+    });
+
+    presentations.value = response;
+  };
+
+  const allProcessed = computed(() => {
+    if (presentations.value === null) fetchPresentations();
+    return presentations.value?.findIndex((p) => p.result.pptx_status === "В очереди") === -1;
+  });
 
   return {
-    currentPresentation: curPresentation,
-    currentPresentationId,
-    setCurrentPresentation,
-    fetchCurrentPres,
+    allProcessed,
+    fetchPresentations,
+    presentations,
   };
 });
