@@ -18,11 +18,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     headers: defaultHeaders,
     async onRequest({ request, options }) {
       const token = authStore.access_token;
-      if (token && !(request === AuthAPIURLS.LOGIN))
-        options.headers = {
-          ...defaultHeaders,
-          Authorization: `Bearer ${token}`,
-        };
+      if (token && !(request === AuthAPIURLS.LOGIN)) {
+        options.headers = { Authorization: `Bearer ${token}` };
+      }
     },
     async onResponseError({ request, response, options }) {
       if (response?.status === 401 || response?.status === 403) {

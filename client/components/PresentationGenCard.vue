@@ -5,6 +5,9 @@ const isLoading = ref(false);
 
 const useCustomLogo = ref(false);
 const useCustomName = ref(false);
+
+const custom_name = ref("");
+const custom_logo = ref<File | undefined>(undefined);
 const description = ref("");
 
 const submitCallback = async () => {
@@ -12,12 +15,20 @@ const submitCallback = async () => {
 
   const response = await createPresentation({
     generate_logo: false,
-    generate_name: false,
+    generate_name: !useCustomName,
     description: description.value,
+    name: useCustomName ? custom_name.value : undefined,
+    logo: useCustomLogo ? custom_logo.value : undefined,
   });
 
   const presentStore = usePresentStore();
   presentStore.setCurrentPresentation(response.id.toString());
+};
+
+const onFileChange = (e: InputEvent) => {
+  let files = (e.target as HTMLInputElement).files || e.dataTransfer?.files;
+  if (!files || !files.length) return;
+  custom_logo.value = files[0];
 };
 </script>
 
@@ -50,6 +61,7 @@ const submitCallback = async () => {
           <div v-if="useCustomName">
             <FormKit
               type="text"
+              v-model="custom_name"
               validation-label="«название»"
               validation-visibility="blur"
               :validation="useCustomName ? 'required' : ''" />
@@ -79,6 +91,7 @@ const submitCallback = async () => {
               validation-label="«логотип»"
               accept=".png"
               validation-visibility="blur"
+              @change.prevent="onFileChange"
               help="Логотип в формате .png достаточного разрешения"
               :validation="useCustomLogo ? 'required' : ''" />
           </div>

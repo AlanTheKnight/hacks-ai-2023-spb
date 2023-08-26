@@ -2,6 +2,8 @@ export interface CreatePresentationAPI {
   description: string;
   generate_logo: boolean;
   generate_name: boolean;
+  name?: string;
+  logo?: File;
 }
 
 export interface PresentationAPI {
@@ -13,12 +15,24 @@ export interface PresentationAPI {
 }
 
 export const createPresentation = async (data: CreatePresentationAPI) => {
+  const fd = new FormData();
+  fd.append("description", data.description);
+  fd.append("generate_logo", data.generate_logo ? "true" : "false");
+  fd.append("generate_name", data.generate_name ? "true" : "false");
+  if (data.name) fd.append("name", data.name);
+  if (data.logo) fd.append("logo", data.logo);
+
   return $fetch<PresentationAPI>("presentations/", {
     method: "POST",
-    body: data,
+    body: fd,
+    headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
 export const getPresentation = async (id: string) => {
-  return $fetch<PresentationAPI>("presentations/" + id)
-}
+  return $fetch<PresentationAPI>("presentations/" + id, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};

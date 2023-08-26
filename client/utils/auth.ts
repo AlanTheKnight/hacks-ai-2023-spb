@@ -31,13 +31,26 @@ export const login = async (data: TelegramUserData) => {
   return $fetch<APITokens>(AuthAPIURLS.LOGIN, {
     method: "POST",
     body: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
 export const getCurrentUser = async () => {
-  return $fetch<APIUser>(AuthAPIURLS.CURRENT_USER);
+  return $fetch<APIUser>(AuthAPIURLS.CURRENT_USER, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
 
 export const logout = async (refresh_token: string) => {
-  $fetch(AuthAPIURLS.LOGOUT, { method: "POST", body: { refresh: refresh_token } });
+  $fetch(AuthAPIURLS.LOGOUT, {
+    method: "POST",
+    body: { refresh: refresh_token },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
