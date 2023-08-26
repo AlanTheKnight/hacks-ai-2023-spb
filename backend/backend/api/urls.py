@@ -1,7 +1,9 @@
-from rest_framework.routers import SimpleRouter
-
+from django.urls import path
 from backend.api.views import PresentationAPIList, PresentationAPIDetail
 
-router = SimpleRouter()
-router.register("presentations", PresentationAPIList.as_view())
-router.register("presentations/<int:pk>", PresentationAPIDetail.as_view())
+app_name = "api"
+
+urlpatterns = [
+    path("presentations/", PresentationAPIList.as_view()),
+    path("presentations/<int:pk>", PresentationAPIDetail.as_view()),
+]
