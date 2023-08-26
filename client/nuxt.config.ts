@@ -11,13 +11,16 @@ export default defineNuxtConfig({
     output: {
       publicDir: path.join(__dirname, "../backend/output"),
     },
+    routeRules: {
+      "/api/**": { proxy: "http://localhost:8000/api/**" },
+    },
   },
   formkit: {
     configFile: "./formkit.config.ts",
   },
   devServer: {
     port: 80,
-    host: "127.0.0.1"
+    host: "127.0.0.1",
   },
   app: {
     head: {

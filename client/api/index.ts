@@ -73,15 +73,6 @@ export class APIService {
   public readonly noAuthAxios: AxiosInstance = noAuthInstance;
 }
 
-export interface Paginator<T> extends RawPaginator {
-  results: T[];
-}
-
-export interface RawPaginator {
-  next: string | null;
-  previous: string | null;
-  count: number;
-}
 
 const API = new APIService();
 export default API;

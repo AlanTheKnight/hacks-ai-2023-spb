@@ -28,6 +28,7 @@ SECRET_KEY = config["Django"]["SECRET_KEY"]
 DEBUG = config["Django"]["DEBUG"]
 
 ALLOWED_HOSTS = config["Django"]["ALLOWED_HOSTS"]
+TELEGRAM_BOT_TOKEN = config["Telegram"]["BOT_TOKEN"]
 
 
 # Application definition
@@ -39,11 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
-
     "backend.api.apps.ApiConfig",
     "backend.authentication.apps.AuthConfig",
 ]

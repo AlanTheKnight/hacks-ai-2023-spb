@@ -26,3 +26,10 @@ export interface APITokens {
   access: string;
   refresh: string;
 }
+
+export const login = async (data: TelegramUserData) => {
+  return $fetch<APITokens>(AuthAPIURLS.LOGIN, {
+    method: "POST",
+    body: data,
+  });
+};

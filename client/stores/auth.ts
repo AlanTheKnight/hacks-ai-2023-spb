@@ -24,15 +24,15 @@ export const useAuthStore = defineStore("auth", () => {
   //   })
   // }
 
-  // function loginAction(data: TelegramUserData) {
-  //   login(data).then((response) => {
-  //     setLocalData(LocalData.ACCESS_TOKEN, response.data.access)
-  //     setLocalData(LocalData.REFRESH_TOKEN, response.data.refresh)
-  //     access_token.value = response.data.access
-  //     refresh_token.value = response.data.refresh
-  //     currentUserAction()
-  //   })
-  // }
+  function loginAction(data: TelegramUserData) {
+    login(data).then((response) => {
+      setLocalData(LocalData.ACCESS_TOKEN, response.access);
+      setLocalData(LocalData.REFRESH_TOKEN, response.refresh);
+      access_token.value = response.access;
+      refresh_token.value = response.refresh;
+      // currentUserAction()
+    });
+  }
 
   // function logoutAction() {
   //   if (!refresh_token.value) return
@@ -52,7 +52,7 @@ export const useAuthStore = defineStore("auth", () => {
   return {
     user,
     loggedIn,
-    // loginAction,
+    loginAction,
     // logoutAction,
     access_token,
     refresh_token,

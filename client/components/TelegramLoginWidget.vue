@@ -33,6 +33,6 @@ onMounted(() => {
 
 const onTelegramAuth = (data: TelegramUserData) => {
   const authStore = useAuthStore();
-  //   authStore.loginAction(data);
+  authStore.loginAction(data);
 };
 </script>
