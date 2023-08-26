@@ -146,3 +146,6 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = config["Celery"]["BROKER_URL"]
 CELERY_RESULT_BACKEND = config["Celery"]["BROKER_URL"]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "media"

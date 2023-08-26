@@ -114,9 +114,10 @@ def final_generation(id: int, pptx_data: dict, logo: str, name: str):
     data["name"] = name
     data["brief"] = pptx_data["about"]
 
-    URL = settings.BASE_DIR / settings.MEDIA_ROOT / f"presentation-{id}.pptx"
-    # driver(data, settings.BASE_DIR / f"presentation-{id}.pptx")
-    print("ВСЁ ГОТОВО", URL)
+    FILENAME = f"media/presentation-{id}.pptx"
+    URL = str(settings.BASE_DIR / FILENAME)
+
+    driver(data, URL)
 
     return URL
 
@@ -132,28 +133,24 @@ def process_presentation(self, presentation_id: int):
 
     presentation.result.pptx_status = "Обработка"
     presentation.result.pptx_data = get_pptx_data(presentation.description)
-    print("OKKKKKKK")
     presentation.result.save()
 
-    if False:
-        if presentation.checko_url is not None:
-            presentation.result.pptx_data = (
-                presentation.result.pptx_data
-                | get_economic_data(presentation.checko_url)
-            )
+    if presentation.checko_url is not None:
+        presentation.result.pptx_data = (
+            presentation.result.pptx_data | get_economic_data(presentation.checko_url)
+        )
 
     presentation.result.pptx_status = "Готово"
 
-    if False:
-        if presentation.generate_logo:
-            presentation.result.logo_status = "Обработка"
-            presentation.result.logo = get_logo(presentation.description)
-        presentation.result.logo_status = "Готово"
+    if presentation.generate_logo:
+        presentation.result.logo_status = "Обработка"
+        presentation.result.logo = get_logo(presentation.description)
+    presentation.result.logo_status = "Готово"
 
     presentation.result.pptx = final_generation(
         presentation.id,
         presentation.result.pptx_data,
         presentation.result.logo,
-        presentation.result.name,
+        "MathUp",
     )
     presentation.result.save()

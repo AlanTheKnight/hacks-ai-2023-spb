@@ -72,6 +72,6 @@ def driver(config, output_path: str):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     create_title_slide(config, slide)
     set_slide_background(config, slide)
-    add_custom_logo(config, prs, slide)
+    # add_custom_logo(config, prs, slide)
 
     prs.save(output_path)

@@ -11,8 +11,8 @@ const submitCallback = async () => {
   isLoading.value = true;
 
   const response = await createPresentation({
-    generate_logo: !useCustomLogo.value,
-    generate_name: !useCustomName.value,
+    generate_logo: false,
+    generate_name: false,
     description: description.value,
   });
 
