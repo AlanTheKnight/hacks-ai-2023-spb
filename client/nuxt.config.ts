@@ -2,7 +2,7 @@ import path from "path";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   modules: ["@formkit/nuxt", "@pinia/nuxt"],
   css: [
     "~/assets/styles/main.scss",

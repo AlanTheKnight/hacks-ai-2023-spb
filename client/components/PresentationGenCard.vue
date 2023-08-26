@@ -48,7 +48,11 @@ const submitCallback = async () => {
             >
           </div>
           <div v-if="useCustomName">
-            <FormKit type="text" validation-label="«название»" />
+            <FormKit
+              type="text"
+              validation-label="«название»"
+              validation-visibility="blur"
+              :validation="useCustomName ? 'required' : ''" />
           </div>
         </div>
 
@@ -70,7 +74,13 @@ const submitCallback = async () => {
           </div>
 
           <div v-if="useCustomLogo">
-            <FormKit type="file" validation-label="«логотип»" accept=".png" />
+            <FormKit
+              type="file"
+              validation-label="«логотип»"
+              accept=".png"
+              validation-visibility="blur"
+              help="Логотип в формате .png достаточного разрешения"
+              :validation="useCustomLogo ? 'required' : ''" />
           </div>
         </div>
 

@@ -26,6 +26,7 @@ class ExtendedPresentationSerializer(serializers.ModelSerializer):
 
 class PresentationSerializer(serializers.ModelSerializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    result = ResultSerializer()
 
     class Meta:
         model = Presentation

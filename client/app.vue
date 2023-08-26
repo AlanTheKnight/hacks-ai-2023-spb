@@ -15,6 +15,7 @@ onMounted(() => {
   <div class="rt-wp view-wrapper">
     <NuxtPage />
   </div>
+  <MainFooter />
 </template>
 
 <style>
@@ -26,6 +27,10 @@ html {
   position: relative;
   min-height: 100%;
   scroll-behavior: smooth;
+}
+
+.view-wrapper {
+  min-height: 1e00vh;
 }
 
 /* @media (min-width: 768px) {
