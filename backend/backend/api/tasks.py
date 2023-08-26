@@ -7,6 +7,7 @@ from backend.api.models import Presentation
 from backend.celery import celery_app, mlclient_lm
 from pprint import pprint
 
+
 def get_economic_data(checko_url: str):
     logging.info("Start get_economic_data")
     response = dict()
@@ -46,7 +47,8 @@ def get_pptx_data(description: str):
     job = mlclient_lm.submit(f"qa_{description}_Какая проблема существует на рынке компании?*Проблема: ")
     pptx_data["problem"] = job.result()
 
-    job = mlclient_lm.submit(f"qa_{description}_Как компания решает существующие проблемы на рынке?*Для этого компания ")
+    job = mlclient_lm.submit(
+        f"qa_{description}_Как компания решает существующие проблемы на рынке?*Для этого компания ")
     pptx_data["solution"] = job.result()
 
     job = mlclient_lm.submit(f"qa_{description}_Для кого работает компания?*Для ")
@@ -76,7 +78,8 @@ def get_logo(description: str):
 
 
 def get_name(description: str):
-    return "Моя презентация"
+    job = mlclient_lm.submit(f"tg_{description}")
+    return job.result()
 
 
 def final_generation(pptx_data: dict, logo: str, name: str):
@@ -86,12 +89,21 @@ def final_generation(pptx_data: dict, logo: str, name: str):
 @celery_app.task(bind=True)
 def process_presentation(self, presentation_id: int):
     presentation = Presentation.objects.get(pk=presentation_id)
+
     if presentation.generate_name:
+        presentation.result.name_status = "Обработка"
         presentation.result.name = get_name(presentation.description)
     presentation.result.name_status = "Готово"
+
+    presentation.result.pptx_status = "Обработка"
     presentation.result.pptx_data = get_pptx_data(presentation.description)
     if presentation.checko_url is not None:
         presentation.result.pptx_data = presentation.result.pptx_data | get_economic_data(presentation.checko_url)
+    presentation.result.pptx_status = "Готово"
+
     if presentation.generate_logo:
+        presentation.result.logo_status = "Обработка"
         presentation.result.logo = get_logo(presentation.description)
-    presentation.result.pptx = final_generation(presentation.result.pptx_data, presentation.result.logo, presentation.result.name)
+    presentation.result.logo_status = "Готово"
+    presentation.result.pptx = final_generation(presentation.result.pptx_data, presentation.result.logo,
+                                                presentation.result.name)
