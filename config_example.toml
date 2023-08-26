@@ -8,3 +8,7 @@ BOT_TOKEN = "YOUR_BOT_TOKEN"
 
 [Celery]
 BROKER_URL = "redis://localhost:6379/0"
+
+[Gradio]
+LANGUAGE_MODEL = "https://*.gradio.live/"
+KANDINSKY_MODEL = ""

@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup as BS
 
 from backend.api.models import Presentation
-from backend.celery import celery_app
-
+from backend.celery import celery_app, mlclient_lm
+from pprint import pprint
 
 def get_economic_data(checko_url: str):
     logging.info("Start get_economic_data")
@@ -38,7 +38,37 @@ def get_economic_data(checko_url: str):
 
 
 def get_pptx_data(description: str):
-    return {"about": description}
+    print("Start get_pptx_data")
+    pptx_data = {}
+    job = mlclient_lm.submit(f"qa_{description}_Кратко опиши компанию")
+    pptx_data["about"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_Какая проблема существует на рынке компании?*Проблема: ")
+    pptx_data["problem"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_Как компания решает существующие проблемы на рынке?*Для этого компания ")
+    pptx_data["solution"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_Для кого работает компания?*Для ")
+    pptx_data["target"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_В чем цель компании?*Основная цель: ")
+    pptx_data["goal"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_Что делает компания?*Компания")
+    pptx_data["activity"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_Какие преимущества у компании перед конкурентами?")
+    pptx_data["advantages"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_В чем удобство для пользователя?*Удобство для пользователя - ")
+    pptx_data["convenience"] = job.result()
+
+    job = mlclient_lm.submit(f"qa_{description}_В чем ценность и уникальность?*Главная ценность -")
+    pptx_data["value"] = job.result()
+
+    print("End get_pptx_data")
+    return pptx_data
 
 
 def get_logo(description: str):
@@ -58,8 +88,9 @@ def process_presentation(self, presentation_id: int):
     presentation = Presentation.objects.get(pk=presentation_id)
     if presentation.generate_name:
         presentation.result.name = get_name(presentation.description)
+    presentation.result.name_status = "Готово"
     presentation.result.pptx_data = get_pptx_data(presentation.description)
-    if presentation.checko_url != "":
+    if presentation.checko_url is not None:
         presentation.result.pptx_data = presentation.result.pptx_data | get_economic_data(presentation.checko_url)
     if presentation.generate_logo:
         presentation.result.logo = get_logo(presentation.description)
