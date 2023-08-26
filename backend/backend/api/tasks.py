@@ -23,16 +23,15 @@ BASE_DATA = {
 }
 
 
-def get_economic_data(checko_url: str):
+def get_economic_data(inn: str):
     logging.info("Start get_economic_data")
     response = dict()
-    page = requests.get(checko_url)
+    page = requests.get(f"https://checko.ru/search?query={inn}")
     soup = BS(page.content, "html.parser").find("article", class_="uk-flex-auto")
     s_base_info = soup.find_all("div", class_="basic-data")
-    s_activity = soup.find("table", class_="uk-table uk-table-striped").find_all(
-        "td", class_="uk-width-expand"
-    )
+    s_activity = soup.find("table", class_="uk-table uk-table-striped").find_all("td", class_="uk-width-expand")
     s_coeff = soup.find_all("table", class_="uk-table uk-table-small")[1].find_all("tr")
+    s_competitors = soup.find("table", class_="uk-table data-table no-last-border")
 
     response["date_registration"] = s_base_info[2].find_all("div")[1].text
     response["legal_address"] = s_base_info[4].find_all("div")[1].text
@@ -51,6 +50,8 @@ def get_economic_data(checko_url: str):
     response["return_sales"] = s_coeff[9].text.split()[-1]
     response["return_assets"] = s_coeff[10].text.split()[-1]
     response["return_equity"] = s_coeff[11].text.split()[-1]
+
+    response["competitors"] = [i.text for i in s_competitors.find_all("a", class_="link")]
     logging.info("End get_economic_data")
     return response
 
