@@ -11,6 +11,8 @@ python = "^3.11"
 djangorestframework = "^3.14.0"
 django = "^4.2.4"
 toml = "^0.10.2"
+ipykernel = "^6.25.1"
+python-pptx = "^0.6.21"
 
 
 [tool.poetry.group.dev.dependencies]
