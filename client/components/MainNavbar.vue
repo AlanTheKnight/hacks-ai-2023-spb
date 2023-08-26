@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { scrollToSection } from "@/utils/scrolling";
+import { useAuthStore } from "~/stores/auth";
+
+const authStore = useAuthStore();
 
 const isScrolled = ref(false);
 
@@ -42,16 +45,16 @@ onUnmounted(() => {
       </button>
 
       <div class="collapse navbar-collapse" id="mainNavbarContent">
-        <!-- <ul class="navbar-nav mt-1 mx-auto">
-          <li class="nav-item">
+        <ul class="navbar-nav mt-1 mx-auto">
+          <!-- <li class="nav-item">
             <a
               class="nav-link"
               href="#about-us-section"
               @click.prevent="scrollToSection('#about-us-section')"
               >О нас</a
             >
-          </li>
-        </ul> -->
+          </li> -->
+        </ul>
 
         <!-- <button
           class="btn btn-outline-primary end-0 me-3"
@@ -60,6 +63,10 @@ onUnmounted(() => {
         >
           <i class="bi-telephone-fill me-2"></i>Связаться с нами
         </button> -->
+
+        <div v-if="!authStore.loggedIn">
+          <TelegramLoginWidget />
+        </div>
       </div>
     </div>
   </nav>

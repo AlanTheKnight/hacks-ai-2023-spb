@@ -15,6 +15,10 @@ export default defineNuxtConfig({
   formkit: {
     configFile: "./formkit.config.ts",
   },
+  devServer: {
+    port: 80,
+    host: "127.0.0.1"
+  },
   app: {
     head: {
       title: "NeoPitch",
