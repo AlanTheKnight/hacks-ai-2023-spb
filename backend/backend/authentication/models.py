@@ -8,8 +8,10 @@ from backend.authentication.manager import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User model."""
+
     is_active = models.BooleanField("Активный", default=True)
     is_staff = models.BooleanField("Администратор", default=False)
+    is_admin = models.BooleanField("Администратор", default=False)
 
     first_name = models.CharField("Имя", max_length=100)
     last_name = models.CharField("Фамилия", max_length=100)

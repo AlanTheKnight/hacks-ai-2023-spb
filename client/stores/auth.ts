@@ -1,15 +1,6 @@
 import { defineStore } from "pinia";
 import { LocalData, getLocalData } from "~/utils/local";
-import { computed, onMounted, ref } from "vue";
-import { APIUser } from "~/utils/auth";
-// import router from "@/router";
-// import {
-//   login,
-//   type TelegramUserData,
-//   logout,
-//   type APIUser,
-//   currentUser,
-// } from "@/api/services/auth";
+import { APIUser, TelegramUserData } from "~/utils/auth";
 
 export const useAuthStore = defineStore("auth", () => {
   const access_token = ref<string | null>(getLocalData(LocalData.ACCESS_TOKEN));
@@ -18,11 +9,13 @@ export const useAuthStore = defineStore("auth", () => {
 
   const loggedIn = computed(() => user.value !== null);
 
-  // function currentUserAction() {
-  //   currentUser().then((r) => {
-  //     user.value = r.data
-  //   })
-  // }
+  const router = useRouter();
+
+  function getCurrentUserAction() {
+    getCurrentUser().then((r) => {
+      user.value = r;
+    });
+  }
 
   function loginAction(data: TelegramUserData) {
     login(data).then((response) => {
@@ -30,32 +23,33 @@ export const useAuthStore = defineStore("auth", () => {
       setLocalData(LocalData.REFRESH_TOKEN, response.refresh);
       access_token.value = response.access;
       refresh_token.value = response.refresh;
-      // currentUserAction()
+      getCurrentUserAction();
+      router.push("/");
     });
   }
 
-  // function logoutAction() {
-  //   if (!refresh_token.value) return
-  //   logout(refresh_token.value).then(() => {
-  //     clearLocalData()
-  //     user.value = null
-  //     router.push('/')
-  //   })
-  // }
+  function logoutAction() {
+    if (!refresh_token.value) return;
+    logout(refresh_token.value).then(() => {
+      clearLocalData();
+      user.value = null;
+      router.push("/");
+    });
+  }
 
-  // onMounted(() => {
-  //   if (user.value === null && access_token) {
-  //     currentUserAction()
-  //   }
-  // })
+  onMounted(() => {
+    if (user.value === null && access_token.value) {
+      getCurrentUserAction(); 
+    }
+  });
 
   return {
     user,
     loggedIn,
     loginAction,
-    // logoutAction,
+    logoutAction,
     access_token,
     refresh_token,
-    // currentUserAction,
+    getCurrentUserAction,
   };
 });

@@ -1,29 +1,29 @@
 [tool.poetry]
+authors = ["Maksim Gusev <51376126+AlanTheKnight@users.noreply.github.com>"]
+description = "Case solution for \"Leaders of Digital\" hackathon in Saint Petersburg (25.08 - 27.08)"
+license = "MIT"
 name = "backend"
 version = "1.0.0"
-description = "Case solution for \"Leaders of Digital\" hackathon in Saint Petersburg (25.08 - 27.08)"
-authors = ["Maksim Gusev <51376126+AlanTheKnight@users.noreply.github.com>"]
-license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-djangorestframework = "^3.14.0"
-django = "^4.2.4"
-toml = "^0.10.2"
-ipykernel = "^6.25.1"
-python-pptx = "^0.6.21"
-djangorestframework-simplejwt = "^5.3.0"
 celery = "^5.3.1"
+django = "^4.2.4"
+djangorestframework = "^3.14.0"
+djangorestframework-simplejwt = "^5.3.0"
 gradio-client = "^0.5.0"
+ipykernel = "^6.25.1"
+python = "^3.11"
+python-pptx = "^0.6.21"
 redis = "^5.0.0"
-requests = "^2.31.0"
-beautifulsoup4 = "^4.12.2"
 
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^6.1.0"
 black = "^23.7.0"
+flake8 = "^6.1.0"
+
+[tool.black]
+line-length = 100
 
 [build-system]
-requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
