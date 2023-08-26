@@ -1,5 +1,9 @@
 from django.urls import path
-from backend.api.views import PresentationAPIList, PresentationAPIDetail, ResultAPIDetail
+from backend.api.views import (
+    PresentationAPIList,
+    PresentationAPIDetail,
+    ResultAPIDetail,
+)
 
 app_name = "api"
 
