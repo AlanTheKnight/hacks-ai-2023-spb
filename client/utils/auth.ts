@@ -33,3 +33,11 @@ export const login = async (data: TelegramUserData) => {
     body: data,
   });
 };
+
+export const getCurrentUser = async () => {
+  return $fetch<APIUser>(AuthAPIURLS.CURRENT_USER);
+};
+
+export const logout = async (refresh_token: string) => {
+  $fetch(AuthAPIURLS.LOGOUT, { method: "POST", body: { refresh: refresh_token } });
+};

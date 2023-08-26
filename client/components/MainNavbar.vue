@@ -27,13 +27,13 @@ onUnmounted(() => {
       scrolled: isScrolled,
     }">
     <div class="container position-relative">
-      <a
+      <NuxtLink
         @click.prevent="scrollToSection('#home')"
-        href="/#home"
+        to="/"
         class="navbar-brand d-flex align-items-center start-0 ms-3 fw-bold">
         <img src="@/assets/images/logo.svg" alt="" height="38" class="me-2" />
         NeoPitch
-      </a>
+      </NuxtLink>
 
       <button
         class="navbar-toggler"
@@ -64,8 +64,25 @@ onUnmounted(() => {
           <i class="bi-telephone-fill me-2"></i>Связаться с нами
         </button> -->
 
-        <div v-if="!authStore.loggedIn">
+        <div v-if="!authStore.user">
           <TelegramLoginWidget />
+        </div>
+        <div v-else class="d-flex align-items-center">
+          <div class="dropdown">
+            <div data-bs-toggle="dropdown" class="d-flex flex-row align-items-center">
+              <div class="me-2 fw-bold">{{ authStore.user.username }}</div>
+              <UserIcon :user="authStore.user" />
+            </div>
+
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="#" @click.prevent="authStore.logoutAction">
+                  <i class="bi-box-arrow-right me-2"></i>
+                  <span>Log out</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -93,4 +110,10 @@ onUnmounted(() => {
     position: absolute;
   }
 } */
+
+.userAvatar {
+  border-radius: 0.375rem;
+  width: 40px;
+  height: 40px;
+}
 </style>

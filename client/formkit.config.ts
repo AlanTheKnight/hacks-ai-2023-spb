@@ -34,7 +34,7 @@ export default defineFormKitConfig({
       },
       submit: {
         outer: "$reset mt-3 text-center",
-        input: "$reset btn btn-outline-primary px-4",
+        input: "$reset btn btn-outline-light px-4",
       },
     }),
   },

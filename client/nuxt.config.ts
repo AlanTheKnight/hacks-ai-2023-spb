@@ -2,11 +2,15 @@ import path from "path";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: ["@formkit/nuxt", "@pinia/nuxt"],
-  css: ["~/assets/styles/main.scss", "bootstrap-icons/font/bootstrap-icons.css"],
+  css: [
+    "~/assets/styles/main.scss",
+    "bootstrap-icons/font/bootstrap-icons.css",
+    // "bootstrap/dist/css/bootstrap.min.css",
+  ],
   components: ["~/components"],
-  ssr: true,
+  ssr: false,
   nitro: {
     output: {
       publicDir: path.join(__dirname, "../backend/output"),
