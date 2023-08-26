@@ -68,11 +68,24 @@ def get_pptx_data(description: str):
         "value": f"qa_{description}_В чем ценность и уникальность?*Главная ценность -",
     }
 
-    print("Start get_pptx_data")
-    pptx_data = {}
-    for key, value in keys.items():
-        pptx_data[key] = mlclient_lm.submit(value).result()
-    print("End get_pptx_data")
+    # print("Start get_pptx_data")
+    # pptx_data = {}
+    # for key, value in keys.items():
+    #     pptx_data[key] = mlclient_lm.submit(value).result()
+    # print("End get_pptx_data")
+
+    pptx_data = {
+        "about": "Описание: Приложение для запоминания математических формул",
+        "problem": "Проблема: Приложение для запоминания математических формул",
+        "solution": "Для этого компания Приложение для запоминания математических формул",
+        "target": "Для Приложение для запоминания математических формул",
+        "goal": "Основная цель: Приложение для запоминания математических формул",
+        "activity": "Компания Приложение для запоминания математических формул",
+        "advantages": "Приложение для запоминания математических формул",
+        "convenience": "Удобство для пользователя - Приложение для запоминания математических формул",
+        "value": "Главная ценность - Приложение для запоминания математических формул",
+    }
+
     return pptx_data
 
 
@@ -110,7 +123,9 @@ def process_presentation(self, presentation_id: int):
     presentation.result.pptx_status = "Обработка"
     presentation.result.pptx_data = get_pptx_data(presentation.description)
     if presentation.checko_url is not None:
-        presentation.result.pptx_data = presentation.result.pptx_data | get_economic_data(presentation.checko_url)
+        presentation.result.pptx_data = (
+            presentation.result.pptx_data | get_economic_data(presentation.checko_url)
+        )
     presentation.result.pptx_status = "Готово"
 
     if presentation.generate_logo:

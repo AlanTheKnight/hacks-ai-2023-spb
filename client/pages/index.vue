@@ -18,7 +18,7 @@ const authStore = useAuthStore();
       </div>
     </div>
     <div v-else>
-      <PresentationGenCard />
+      <MainMenu />
     </div>
   </div>
 </template>
