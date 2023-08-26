@@ -11,7 +11,6 @@ from django.conf import settings
 
 from backend.presentations.generation import driver
 
-
 BASE_DATA = {
     "bg": {
         "type": "gradient",
@@ -57,45 +56,22 @@ def get_economic_data(checko_url: str):
 
 
 def get_pptx_data(description: str):
+    keys = {
+        "about": f"qa_{description}_Кратко опиши компанию",
+        "problem": f"qa_{description}_Какая проблема существует на рынке компании?*Проблема: ",
+        "solution": f"qa_{description}_Как компания решает существующие проблемы на рынке?*Для этого компания ",
+        "target": f"qa_{description}_Для кого работает компания?*Для ",
+        "goal": f"qa_{description}_В чем цель компании?*Цель компании ",
+        "activity": f"qa_{description}_Что делает компания?*Компания",
+        "advantages": f"qa_{description}_Какие преимущества у компании перед конкурентами?*Преимущества: ",
+        "convenience": f"qa_{description}_В чем удобство для пользователя?*Удобство для пользователя - ",
+        "value": f"qa_{description}_В чем ценность и уникальность?*Главная ценность -",
+    }
+
     print("Start get_pptx_data")
     pptx_data = {}
-    job = mlclient_lm.submit(f"qa_{description}_Кратко опиши компанию")
-    pptx_data["about"] = job.result()
-
-    job = mlclient_lm.submit(
-        f"qa_{description}_Какая проблема существует на рынке компании?*Проблема: "
-    )
-    pptx_data["problem"] = job.result()
-
-    job = mlclient_lm.submit(
-        f"qa_{description}_Как компания решает существующие проблемы на рынке?*Для этого компания "
-    )
-    pptx_data["solution"] = job.result()
-
-    job = mlclient_lm.submit(f"qa_{description}_Для кого работает компания?*Для ")
-    pptx_data["target"] = job.result()
-
-    job = mlclient_lm.submit(f"qa_{description}_В чем цель компании?*Основная цель: ")
-    pptx_data["goal"] = job.result()
-
-    job = mlclient_lm.submit(f"qa_{description}_Что делает компания?*Компания")
-    pptx_data["activity"] = job.result()
-
-    job = mlclient_lm.submit(
-        f"qa_{description}_Какие преимущества у компании перед конкурентами?"
-    )
-    pptx_data["advantages"] = job.result()
-
-    job = mlclient_lm.submit(
-        f"qa_{description}_В чем удобство для пользователя?*Удобство для пользователя - "
-    )
-    pptx_data["convenience"] = job.result()
-
-    job = mlclient_lm.submit(
-        f"qa_{description}_В чем ценность и уникальность?*Главная ценность -"
-    )
-    pptx_data["value"] = job.result()
-
+    for key, value in keys.items():
+        pptx_data[key] = mlclient_lm.submit(value).result()
     print("End get_pptx_data")
     return pptx_data
 
@@ -133,13 +109,8 @@ def process_presentation(self, presentation_id: int):
 
     presentation.result.pptx_status = "Обработка"
     presentation.result.pptx_data = get_pptx_data(presentation.description)
-    presentation.result.save()
-
     if presentation.checko_url is not None:
-        presentation.result.pptx_data = (
-            presentation.result.pptx_data | get_economic_data(presentation.checko_url)
-        )
-
+        presentation.result.pptx_data = presentation.result.pptx_data | get_economic_data(presentation.checko_url)
     presentation.result.pptx_status = "Готово"
 
     if presentation.generate_logo:
