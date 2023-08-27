@@ -46,7 +46,7 @@ export const getPresentation = async (id: string) => {
 
 export interface ListPresentationsFilters {
   creator__id?: number;
-  result__pptx?: "Готово" | "В очереди";
+  result__pptx?: "Готово" | "Обработка";
 }
 
 export const listPresentations = async (query?: ListPresentationsFilters) => {

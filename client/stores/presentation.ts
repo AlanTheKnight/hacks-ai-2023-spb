@@ -17,7 +17,7 @@ export const usePresentStore = defineStore("presentation", () => {
 
   const allProcessed = computed(() => {
     if (presentations.value === null) fetchPresentations();
-    return presentations.value?.findIndex((p) => p.result.pptx_status === "В очереди") === -1;
+    return presentations.value?.findIndex((p) => p.result.pptx_status !== "Готово") === -1;
   });
 
   return {
