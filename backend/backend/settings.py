@@ -61,7 +61,7 @@ ROOT_URLCONF = "backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["output"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -106,6 +106,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
+
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "output" / "_nuxt", BASE_DIR / "output"]
+STATIC_ROOT = "_nuxt/"
 
 LANGUAGE_CODE = "ru-ru"
 
