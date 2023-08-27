@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .card {
   --bs-card-color: rgba(0, 0, 0, 0.831) !important;
   --bs-secondary-color: rgba(0, 0, 0, 0.649) !important;
