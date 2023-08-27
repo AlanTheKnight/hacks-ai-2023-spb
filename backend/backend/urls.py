@@ -9,10 +9,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/auth/", include("backend.authentication.urls")),
     path("api/", include("backend.api.urls")),
+    path("", never_cache(TemplateView.as_view(template_name="index.html")), name="index")
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    index_view = never_cache(TemplateView.as_view(template_name="index.html"))
-    urlpatterns += [path("", index_view, name="index")]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static("/_nuxt/", document_root=settings.BASE_DIR / "output" / "_nuxt")
+urlpatterns += static("/", document_root=settings.BASE_DIR / "output")

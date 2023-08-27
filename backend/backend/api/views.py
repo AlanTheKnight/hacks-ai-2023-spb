@@ -21,7 +21,7 @@ class PresentationAPIList(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         res = self.create(request, *args, **kwargs)
-        process_presentation.delay(res.data["id"])
+        # process_presentation.delay(res.data["id"])
         return res
 
 
