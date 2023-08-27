@@ -14,10 +14,10 @@ from backend.presentations.generation import driver
 BASE_DATA = {
     "bg": {
         "type": "gradient",
-        "color1": "#e0fbff",
-        "color2": "#f5e2ff",
+        "color1": "e0fbff",
+        "color2": "f5e2ff",
     },
-    "logo": {"size": 0.7},
+    "logo": {"size": 0.7, "path": None},
     "font": {"name": "VK Sans Display", "title_size": 50, "regular_size": 38},
 }
 
@@ -78,18 +78,6 @@ def get_pptx_data(description: str):
         pptx_data[key] = mlclient_lm.submit(value).result()
     print("End get_pptx_data")
 
-    # pptx_data = {
-    #     "about": "Описание: Приложение для запоминания математических формул",
-    #     "problem": "Проблема: Приложение для запоминания математических формул",
-    #     "solution": "Для этого компания Приложение для запоминания математических формул",
-    #     "target": "Для Приложение для запоминания математических формул",
-    #     "goal": "Основная цель: Приложение для запоминания математических формул",
-    #     "activity": "Компания Приложение для запоминания математических формул",
-    #     "advantages": "Приложение для запоминания математических формул",
-    #     "convenience": "Удобство для пользователя - Приложение для запоминания математических формул",
-    #     "value": "Главная ценность - Приложение для запоминания математических формул",
-    # }
-
     return pptx_data
 
 
@@ -107,7 +95,7 @@ def final_generation(id: int, pptx_data: dict, logo: str, name: str):
 
     data = deepcopy(BASE_DATA)
     data["name"] = name
-    data["brief"] = pptx_data["about"]
+    data["pptx_data"] = deepcopy(pptx_data)
     data["logo"]["path"] = logo
 
     FILENAME = f"presentation-{id}.pptx"
