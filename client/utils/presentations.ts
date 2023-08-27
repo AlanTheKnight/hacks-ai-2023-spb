@@ -24,8 +24,8 @@ export interface ExtendedPresentationAPI extends PresentationAPI {
 export const createPresentation = async (data: CreatePresentationAPI) => {
   const fd = new FormData();
   fd.append("description", data.description);
-  fd.append("generate_logo", data.generate_logo ? "true" : "false");
-  fd.append("generate_name", data.generate_name ? "true" : "false");
+  fd.append("generate_logo", (data.generate_logo ? "true" : "false"));
+  fd.append("generate_name", (data.generate_name ? "true" : "false"));
   if (data.name) fd.append("name", data.name);
   if (data.logo) fd.append("logo", data.logo);
 

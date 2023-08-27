@@ -84,6 +84,7 @@ def get_pptx_data(description: str):
 def get_logo(prompt: str):
     print("Start logo")
     result_dir = mlclient_sd.submit(f"{prompt}, logo, minimalism, high quality").result()
+    print(result_dir)
     print("End logo")
     return result_dir
 
@@ -131,13 +132,14 @@ def process_presentation(self, presentation_id: int):
     if presentation.generate_logo:
         presentation.result.logo_status = "Обработка"
         presentation.result.logo = get_logo(presentation.result.pptx_data["about"])
+        print(presentation.result.logo)
     presentation.result.logo_status = "Готово"
     presentation.result.save()
 
-    # presentation.result.pptx = final_generation(
-    #     presentation.id,
-    #     presentation.result.pptx_data,
-    #     presentation.result.logo.path,
-    #     presentation.result.name,
-    # )
+    presentation.result.pptx = final_generation(
+        presentation.id,
+        presentation.result.pptx_data,
+        presentation.result.logo.path,
+        presentation.result.name,
+    )
     presentation.result.save()

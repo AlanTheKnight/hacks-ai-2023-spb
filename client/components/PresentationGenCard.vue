@@ -14,11 +14,11 @@ const presentStore = usePresentStore();
 
 const submitCallback = async () => {
   const response = await createPresentation({
-    generate_logo: false,
-    generate_name: !useCustomName,
+    generate_logo: !useCustomLogo.value,
+    generate_name: !useCustomName.value,
     description: description.value,
-    name: useCustomName ? custom_name.value : undefined,
-    logo: useCustomLogo ? custom_logo.value : undefined,
+    name: useCustomName.value ? custom_name.value : undefined,
+    logo: useCustomLogo.value ? custom_logo.value : undefined,
   });
 
   router.push("/archive");

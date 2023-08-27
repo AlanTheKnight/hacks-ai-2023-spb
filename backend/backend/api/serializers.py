@@ -35,6 +35,7 @@ class PresentationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
+        print(validated_data)
         results_kwargs = {}
         if "name" in validated_data:
             results_kwargs["name"] = validated_data.pop("name")
