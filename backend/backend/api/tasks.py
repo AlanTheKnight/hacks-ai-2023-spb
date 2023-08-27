@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup as BS
 
 from backend.api.models import Presentation
-from backend.celery import celery_app, mlclient_lm
+from backend.celery import celery_app, mlclient_lm, mlclient_sd
 from pprint import pprint
 from copy import deepcopy
 from django.conf import settings
@@ -93,8 +93,11 @@ def get_pptx_data(description: str):
     return pptx_data
 
 
-def get_logo(description: str):
-    return "https://cdn.logo.com/hotlink-ok/logo-social.png"
+def get_logo(prompt: str):
+    print("Start logo")
+    result_dir = mlclient_sd.submit(f"{prompt}, logo, minimalism, high quality").result()
+    print("End logo")
+    return result_dir
 
 
 def get_name(description: str):
@@ -126,6 +129,7 @@ def process_presentation(self, presentation_id: int):
         presentation.result.name_status = "Обработка"
         presentation.result.name = get_name(presentation.description)
     presentation.result.name_status = "Готово"
+    presentation.result.save()
 
     presentation.result.pptx_status = "Обработка"
     presentation.result.pptx_data = get_pptx_data(presentation.description)
@@ -134,16 +138,18 @@ def process_presentation(self, presentation_id: int):
             presentation.result.pptx_data | get_economic_data(presentation.checko_url)
         )
     presentation.result.pptx_status = "Готово"
+    presentation.result.save()
 
     if presentation.generate_logo:
         presentation.result.logo_status = "Обработка"
-        presentation.result.logo = get_logo(presentation.description)
+        presentation.result.logo = get_logo(presentation.result.pptx_data["about"])
     presentation.result.logo_status = "Готово"
+    presentation.result.save()
 
-    presentation.result.pptx = final_generation(
-        presentation.id,
-        presentation.result.pptx_data,
-        presentation.result.logo.path,
-        presentation.result.name,
-    )
+    # presentation.result.pptx = final_generation(
+    #     presentation.id,
+    #     presentation.result.pptx_data,
+    #     presentation.result.logo.path,
+    #     presentation.result.name,
+    # )
     presentation.result.save()
