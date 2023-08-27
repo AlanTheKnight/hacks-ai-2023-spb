@@ -126,7 +126,6 @@ def process_presentation(self, presentation_id: int):
         presentation.result.pptx_data = (
             presentation.result.pptx_data | get_economic_data(presentation.checko_url)
         )
-    presentation.result.pptx_status = "Готово"
     presentation.result.save()
 
     if presentation.generate_logo:
@@ -134,6 +133,7 @@ def process_presentation(self, presentation_id: int):
         presentation.result.logo = get_logo(presentation.result.pptx_data["about"])
         print(presentation.result.logo)
     presentation.result.logo_status = "Готово"
+    presentation.result.pptx_status = "Готово"
     presentation.result.save()
 
     presentation.result.pptx = final_generation(
