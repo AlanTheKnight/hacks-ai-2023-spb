@@ -8,7 +8,7 @@ class Presentation(models.Model):
     description = models.TextField("Описание")
     generate_logo = models.BooleanField("Сгенерировать логотип", default=False)
     generate_name = models.BooleanField("Сгенерировать название", default=False)
-    checko_url = models.URLField("Ссылка на Checko", default=None, null=True)
+    checko_url = models.CharField("ИНН", default=None, null=True, max_length=20)
 
     class Meta:
         verbose_name = "Презентация"
